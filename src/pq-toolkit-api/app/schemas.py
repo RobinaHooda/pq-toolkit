@@ -25,6 +25,81 @@ class PqTestTypes(Enum):
     ACR: str = "ACR"
 
 
+class PqTestBaseResult(BaseModel):
+    uid: int | None = None
+
+    test_number: int = Field(
+        alias="testNumber", validation_alias=AliasChoices("testNumber", "test_number")
+    )
+
+
+class PqSelection(BaseModel):
+    question_id: str = Field(
+        alias="questionId", validation_alias=AliasChoices("questionId", "question_id")
+    )
+    sample_id: str = Field(
+        alias="sampleId", validation_alias=AliasChoices("sampleId", "sample_id")
+    )
+
+
+class PqTestABResult(PqTestBaseResult):
+    selections: list[PqSelection]
+
+
+class PqTestABXResult(PqTestBaseResult):
+    x_sample_id: str = Field(alias="xSampleId")
+    x_selected: str = Field(alias="xSelected")
+    selections: list[PqSelection] | list
+
+
+class PqTestMUSHRAScore(BaseModel):
+    sample_id: str = Field(alias="sampleId")
+    score: int
+
+
+class PqTestMUSHRAResult(PqTestBaseResult):
+    reference_score: int = Field(alias="referenceScore")
+    anchors_scores: list[PqTestMUSHRAScore] = Field(alias="anchorsScores")
+    samples_scores: list[PqTestMUSHRAScore] = Field(alias="samplesScores")
+
+
+class PqTestACRScore(BaseModel):
+    sample_id: str = Field(alias="sampleId")
+    score: int
+
+
+class PqTestACRResult(PqTestBaseResult):
+    samples_scores: list[PqTestACRScore] = Field(alias="samplesScores")
+
+
+class PqTestAPESampleRating(BaseModel):
+    sample_id: str = Field(alias="sampleId")
+    rating: int
+
+
+class PqTestAPEAxisResult(BaseModel):
+    axis_id: str = Field(alias="axisId")
+    sample_ratings: list[PqTestAPESampleRating] = Field(alias="sampleRatings")
+
+
+class PqTestAPEResult(PqTestBaseResult):
+    axis_results: list[PqTestAPEAxisResult] = Field(alias="axisResults")
+
+
+class PqResultsList(BaseModel):
+    results: list[str]
+
+
+class PqTestResultsList(BaseModel):
+    results: list[
+        PqTestABResult
+        | PqTestABXResult
+        | PqTestMUSHRAResult
+        | PqTestAPEResult
+        | PqTestACRResult
+    ]
+
+
 class PqSample(BaseModel):
     """
     Class representing sound sample.
@@ -32,6 +107,7 @@ class PqSample(BaseModel):
     Attributes:
         sample_id: An ID of the sample.
         asset_path: Path to the sample.
+        rating: Rating of the sample.
     """
 
     sample_id: str = Field(
@@ -40,6 +116,7 @@ class PqSample(BaseModel):
     asset_path: str = Field(
         alias="assetPath", validation_alias=AliasChoices("assetPath", "asset_path")
     )
+    rating: float | None = None
 
 
 class PqQuestion(BaseModel):
@@ -66,12 +143,18 @@ class PqTestBase(BaseModel):
         type: A type of the test.
     """
 
+    uid: int | None = None
+
     model_config = ConfigDict(use_enum_values=True, validate_default=True)
 
     test_number: int = Field(
         alias="testNumber", validation_alias=AliasChoices("testNumber", "test_number")
     )
     type: PqTestTypes
+    results: (
+        list[PqTestMUSHRAResult | PqTestAPEResult | PqTestABXResult | PqTestABResult]
+        | None
+    ) = None
 
 
 class PqTestAB(PqTestBase):
@@ -88,6 +171,7 @@ class PqTestAB(PqTestBase):
     samples: list[PqSample]
     questions: list[PqQuestion]
     type: PqTestTypes = PqTestTypes.AB
+    results: list[PqTestABResult] | None = None
 
 
 class PqTestABX(PqTestBase):
@@ -110,6 +194,7 @@ class PqTestABX(PqTestBase):
     samples: list[PqSample]
     questions: list[PqQuestion] | None = None
     type: PqTestTypes = PqTestTypes.ABX
+    results: list[PqTestABXResult] | None = None
 
 
 class PqTestMUSHRA(PqTestBase):
@@ -130,7 +215,8 @@ class PqTestMUSHRA(PqTestBase):
     anchors: list[PqSample]
     samples: list[PqSample]
     type: PqTestTypes = PqTestTypes.MUSHRA
-    
+    results: list[PqTestMUSHRAResult] | None = None
+
 
 class PqTestACR(PqTestBase):
     """
@@ -162,71 +248,7 @@ class PqTestAPE(PqTestBase):
     axis: list[PqQuestion]
     samples: list[PqSample]
     type: PqTestTypes = PqTestTypes.APE
-
-
-class PqTestBaseResult(BaseModel):
-    test_number: int = Field(
-        alias="testNumber", validation_alias=AliasChoices("testNumber", "test_number")
-    )
-
-
-class PqSelection(BaseModel):
-    question_id: str = Field(
-        alias="questionId", validation_alias=AliasChoices("questionId", "question_id")
-    )
-    sample_id: str = Field(
-        alias="sampleId", validation_alias=AliasChoices("sampleId", "sample_id")
-    )
-
-
-class PqTestABResult(PqTestBaseResult):
-    selections: list[PqSelection]
-
-
-class PqTestABXResult(PqTestBaseResult):
-    x_sample_id: str = Field(alias="xSampleId")
-    x_selected: str = Field(alias="xSelected")
-    selections: list[PqSelection] | list
-
-
-class PqTestMUSHRAScore(BaseModel):
-    sample_id: str = Field(alias="sampleId")
-    score: int
-
-
-class PqTestACRScore(BaseModel):
-    sample_id: str = Field(alias="sampleId")
-    score: int
-
-
-class PqTestMUSHRAResult(PqTestBaseResult):
-    reference_score: int = Field(alias="referenceScore")
-    anchors_scores: list[PqTestMUSHRAScore] = Field(alias="anchorsScores")
-    samples_scores: list[PqTestMUSHRAScore] = Field(alias="samplesScores")
-
-
-class PqTestACRResult(PqTestBaseResult):
-    samples_scores: list[PqTestACRScore] = Field(alias="samplesScores")
-
-
-class PqTestAPESampleRating(BaseModel):
-    sample_id: str = Field(alias="sampleId")
-    rating: int
-
-
-class PqTestAPEAxisResult(BaseModel):
-    axis_id: str = Field(alias="axisId")
-    sample_ratings: list[PqTestAPESampleRating] = Field(alias="sampleRatings")
-
-
-class PqTestAPEResult(PqTestBaseResult):
-    axis_results: list[PqTestAPEAxisResult] = Field(alias="axisResults")
-
-
-class PqTestResultsList(BaseModel):
-    results: list[
-        PqTestABResult | PqTestABXResult | PqTestMUSHRAResult | PqTestACRResult | PqTestAPEResult
-    ]
+    results: list[PqTestAPEResult] | None = None
 
 
 class PqExperiment(BaseModel):
@@ -275,10 +297,6 @@ class PqExperimentsList(BaseModel):
     experiments: list[str]
 
 
-class PqResultsList(BaseModel):
-    results: list[str]
-
-
 class PqSuccessResponse(BaseModel):
     success: bool
 
@@ -293,3 +311,8 @@ class PqApiStatus(BaseModel):
 
 class PqExperimentName(BaseModel):
     name: str
+
+
+class PqSamplesRatings(BaseModel):
+    filename: str
+    average_rating: float

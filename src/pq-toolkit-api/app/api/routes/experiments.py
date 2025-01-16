@@ -7,10 +7,21 @@ from app.schemas import (
     PqSuccessResponse,
     PqExperiment,
     PqTestResultsList,
+    PqSample,
 )
 import app.crud as crud
 
 router = APIRouter()
+
+
+@router.get("/showcase", response_model=dict[str, PqExperiment])
+def get_all(session: SessionDep):
+    return crud.get_all(session)
+
+
+@router.get("/samples", response_model=list[PqSample])
+def get_samples(session: SessionDep):
+    return crud.get_samples(session)
 
 
 @router.get("/", response_model=PqExperimentsList)
@@ -48,7 +59,7 @@ def delete_experiment(
 
 
 @router.get("/{experiment_name}/samples", response_model=list[str])
-def get_samples(sample_manager: SampleManagerDep, experiment_name: str):
+def get_sample(sample_manager: SampleManagerDep, experiment_name: str):
     return crud.get_experiment_samples(sample_manager, experiment_name)
 
 
@@ -64,7 +75,7 @@ def upload_sample(
 
 
 @router.get("/{experiment_name}/samples/{filename}", response_model=UploadFile)
-async def get_sample(
+async def get_sample_by_filename(
     sample_manager: SampleManagerDep, experiment_name: str, filename: str
 ):
     return crud.get_experiment_sample(sample_manager, experiment_name, filename)
