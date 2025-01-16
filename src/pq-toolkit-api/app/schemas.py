@@ -90,7 +90,7 @@ class PqResultsList(BaseModel):
 
 class PqTestResultsList(BaseModel):
     results: list[
-        PqTestABResult | PqTestABXResult | PqTestMUSHRAResult | PqTestAPEResult
+        PqTestABResult | PqTestABXResult | PqTestMUSHRAResult | PqTestAPEResult | PqTestACRResult
     ]
 
 
