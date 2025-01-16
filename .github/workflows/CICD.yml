@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - averages 
   pull_request:
     branches:
       - main
+      - averages 
 
 permissions:
   contents: write
