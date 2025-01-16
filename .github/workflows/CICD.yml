@@ -76,19 +76,7 @@ jobs:
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev up -d
 
       - name: containers
-        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev ps
-
-      - name: logs
-        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev logs
-
-      - name: sleep
-        run: sleep 30
-
-      - name: containers
-        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev ps
- 
-      - name: logs
-        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev logs
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev ps -a
 
       - name: tests
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make test
