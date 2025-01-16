@@ -5,23 +5,25 @@ import {
   type APETest,
   type BaseTest,
   type MUSHRATest,
+  type ACRTest,
   ABTestSchema,
   ABXTestSchema,
   APETestSchema,
   MUSHRATestSchema,
+  ACRTestSchema,
   type ExperimentSetup
 } from './experimentSetup'
 
 /**
  * Validates if test has valid schema base on its type
  * @param test any type of test
- * @returns \{ data: ABTest | ABXTest | MUSHRATest | APETest, validationError: null } if test is valid
+ * @returns \{ data: ABTest | ABXTest | MUSHRATest | ACRTest | APETest, validationError: null } if test is valid
  * @returns \{ data: null, validationError: string } if test is invalid
  */
 export const validateTestSchema = (
   test: BaseTest
 ):
-  | { data: ABTest | ABXTest | MUSHRATest | APETest; validationError: null }
+  | { data: ABTest | ABXTest | MUSHRATest | ACRTest | APETest; validationError: null }
   | { data: null; validationError: string } => {
   let schema
   switch (test.type) {
@@ -37,6 +39,9 @@ export const validateTestSchema = (
     case TestTypeEnum.enum.MUSHRA:
       schema = MUSHRATestSchema
       break
+	case TestTypeEnum.enum.ACR:
+	  schema = ACRTestSchema
+	  break
   }
 
   const parsed = schema.safeParse(test)
@@ -68,6 +73,9 @@ export const listExperimentSamples = (
       castTest.samples.forEach((sample) => uniqueSamples.add(sample.assetPath))
       castTest.anchors.forEach((sample) => uniqueSamples.add(sample.assetPath))
       uniqueSamples.add(castTest.reference.assetPath)
+    } else if (test.type === TestTypeEnum.enum.ACR) {
+      const castTest = test as ACRTest
+      castTest.samples.forEach((sample) => uniqueSamples.add(sample.assetPath))
     }
   })
 

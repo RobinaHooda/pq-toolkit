@@ -8,6 +8,7 @@ import {
   type ABXResult,
   type APEResult,
   type MUSHRAResult,
+  type ACRResult,
   type PartialResult
 } from '@/lib/schemas/experimentState'
 import { fillTest } from './utils'
@@ -120,6 +121,7 @@ const ExperimentContextProvider = ({
       | PartialResult<ABResult>
       | PartialResult<ABXResult>
       | PartialResult<MUSHRAResult>
+      | PartialResult<ACRResult>
       | PartialResult<APEResult>
   ): void => {
     const temp = results.results.filter(

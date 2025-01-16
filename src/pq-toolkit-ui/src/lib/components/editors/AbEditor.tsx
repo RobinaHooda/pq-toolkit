@@ -6,13 +6,17 @@ import {
   type BaseTest,
   type ExperimentSetup,
   type FullABXTest,
-  type MUSHRATest
+  type MUSHRATest,
+  type ACRTest
 } from '@/lib/schemas/experimentSetup'
 import { useState } from 'react'
 import { FaPlus } from 'react-icons/fa'
 import DeleteQuestionComp from '../form/deleteQuestionComp'
+import { getSampleUrl } from '../experiments/common/utils'
+import Playback from '../player/Playback'
 
 const AbEditor = ({
+  experimentName,
   currentTest,
   setCurrentTest,
   fileList,
@@ -21,7 +25,7 @@ const AbEditor = ({
   currentTest: ABTest
   setCurrentTest: React.Dispatch<
     React.SetStateAction<
-      ABTest | ABXTest | FullABXTest | MUSHRATest | APETest | BaseTest
+      ABTest | ABXTest | FullABXTest | MUSHRATest | ACRTest | APETest | BaseTest
     >
   >
   fileList: File[]
@@ -45,6 +49,7 @@ const AbEditor = ({
                   .length > 0
               const isDisabled = !isChecked && sampleTest.length >= 2
               return (
+				<div>
                 <label
                   key={file.name}
                   className="flex items-center relative cursor-pointer mr-2 break-words w-full"
@@ -121,6 +126,12 @@ const AbEditor = ({
                     {file.name}
                   </span>
                 </label>
+				  <Playback
+					key={`sample_player_${file.name}`}
+					assetPath={getSampleUrl(experimentName, file.name)}
+					name={`Sample ${file.name}`}
+				  />
+				</div>
               )
             })
           )}

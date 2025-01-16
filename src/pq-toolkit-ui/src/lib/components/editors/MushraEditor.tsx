@@ -6,11 +6,15 @@ import {
   type BaseTest,
   type ExperimentSetup,
   type FullABXTest,
-  type MUSHRATest
+  type MUSHRATest,
+  type ACRTest,
 } from '@/lib/schemas/experimentSetup'
 import { useState } from 'react'
+import { getSampleUrl } from '../experiments/common/utils'
+import Playback from '../player/Playback'
 
 const MushraEditor = ({
+  experimentName,
   currentTest,
   setCurrentTest,
   fileList,
@@ -19,7 +23,7 @@ const MushraEditor = ({
   currentTest: MUSHRATest
   setCurrentTest: React.Dispatch<
     React.SetStateAction<
-      ABTest | ABXTest | FullABXTest | MUSHRATest | APETest | BaseTest
+      ABTest | ABXTest | FullABXTest | MUSHRATest | ACRTest | APETest | BaseTest
     >
   >
   fileList: File[]
@@ -166,6 +170,7 @@ const MushraEditor = ({
             </h3>
           ) : (
             fileList.map((file, index) => (
+			  <div>
               <label
                 key={index}
                 className="flex items-center relative cursor-pointer mr-2 break-words w-full"
@@ -224,7 +229,13 @@ const MushraEditor = ({
                   </span>
                 </span>
                 <span className="ml-2 break-words w-full">{file.name}</span>
-              </label>
+                </label>
+				  <Playback
+					key={`sample_player_${file.name}`}
+					assetPath={getSampleUrl(experimentName, file.name)}
+					name={`Sample ${file.name}`}
+				  />
+				</div>
             ))
           )}
         </div>

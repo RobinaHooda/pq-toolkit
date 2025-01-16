@@ -6,17 +6,7 @@
 	"tests": [
 		  {
 		"testNumber": 1,
-		"type": "MUSHRA",
-		"reference": {
-		  "sampleId": "ref",
-		  "assetPath": "file_sample_5.mp3"
-		},
-		"anchors": [
-		  {
-			"sampleId": "a1",
-			"assetPath": "file_sample_700.mp3"
-		  }
-		],
+		"type": "ACR",
 		"samples": [
 		  {
 			"sampleId": "s1",
@@ -25,6 +15,14 @@
 		  {
 			"sampleId": "s2",
 			"assetPath": "sample-15s.mp3"
+		  },
+		  {
+			"sampleId": "s4",
+			"assetPath": "file_sample_700.mp3"
+		  },
+		  {
+			"sampleId": "s3",
+			"assetPath": "file_sample_5.mp3"
 		  }
 		]
 	  }
