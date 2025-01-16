@@ -56,6 +56,9 @@ class NoTestsFoundForExperiment(PqException):
     def __init__(self, experiment_name: str) -> None:
         super().__init__(f"Experiment {experiment_name} has not tests!", error_code=404)
 
+class TestNotFound(PqException):
+    def __init__(self, test_id: int) -> None:
+        super().__init__(f"test {test_id} does not exist", error_code=404)
 
 class NoResultsData(PqException):
     def __init__(self) -> None:
