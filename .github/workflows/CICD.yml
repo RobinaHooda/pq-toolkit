@@ -4,10 +4,11 @@ on:
   push:
     branches:
       - main
+      - pipeline-setup
   pull_request:
     branches:
       - main
-
+      - pipeline-setup
 permissions:
   contents: write
 
