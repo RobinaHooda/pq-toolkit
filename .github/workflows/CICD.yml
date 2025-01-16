@@ -45,13 +45,6 @@ jobs:
       
       - name: make .env.stage file
         run: cp src/deployments/.env.stage.sample src/deployments/.env.stage
-        
-      - name: build docker stage image
-        run: docker compose -f src/deployments/docker-compose.stage.yml --env-file src/deployments/.env.stage build
-
-      - name: stop stage docker
-        run: docker compose -f src/deployments/docker-compose.stage.yml --env-file src/deployments/.env.stage down
-
 
       - name: make .env.dev file
         run: cp src/deployments/.env.dev.sample env.dev
@@ -73,14 +66,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+
       - name: get env.dev artifact
         uses: actions/download-artifact@v4
         with:
           name: env-file
-
+          
       - name: start docker
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev up -d
 
+      - name: logs
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev logs
+
+      - name: sleep
+        run: sleep 30
+        
+      - name: logs
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev logs
  
       - name: tests
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make test
