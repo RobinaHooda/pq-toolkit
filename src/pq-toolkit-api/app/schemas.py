@@ -3,6 +3,7 @@ from enum import Enum
 import inspect
 import uuid
 
+
 class AccessToken(BaseModel):
     access_token: str
     token_type: str = "bearer"
@@ -24,15 +25,12 @@ class PqTestTypes(Enum):
     ACR: str = "ACR"
 
 
-
 class PqTestBaseResult(BaseModel):
     uid: int | None = None
 
     test_number: int = Field(
         alias="testNumber", validation_alias=AliasChoices("testNumber", "test_number")
     )
-
-
 
 
 class PqSelection(BaseModel):
@@ -64,12 +62,15 @@ class PqTestMUSHRAResult(PqTestBaseResult):
     anchors_scores: list[PqTestMUSHRAScore] = Field(alias="anchorsScores")
     samples_scores: list[PqTestMUSHRAScore] = Field(alias="samplesScores")
 
+
 class PqTestACRScore(BaseModel):
     sample_id: str = Field(alias="sampleId")
     score: int
 
+
 class PqTestACRResult(PqTestBaseResult):
     samples_scores: list[PqTestACRScore] = Field(alias="samplesScores")
+
 
 class PqTestAPESampleRating(BaseModel):
     sample_id: str = Field(alias="sampleId")
@@ -88,9 +89,14 @@ class PqTestAPEResult(PqTestBaseResult):
 class PqResultsList(BaseModel):
     results: list[str]
 
+
 class PqTestResultsList(BaseModel):
     results: list[
-        PqTestABResult | PqTestABXResult | PqTestMUSHRAResult | PqTestAPEResult | PqTestACRResult
+        PqTestABResult
+        | PqTestABXResult
+        | PqTestMUSHRAResult
+        | PqTestAPEResult
+        | PqTestACRResult
     ]
 
 
@@ -136,6 +142,7 @@ class PqTestBase(BaseModel):
         test_number: A number of the test.
         type: A type of the test.
     """
+
     uid: int | None = None
 
     model_config = ConfigDict(use_enum_values=True, validate_default=True)
@@ -144,7 +151,11 @@ class PqTestBase(BaseModel):
         alias="testNumber", validation_alias=AliasChoices("testNumber", "test_number")
     )
     type: PqTestTypes
-    results: list[PqTestMUSHRAResult | PqTestAPEResult | PqTestABXResult | PqTestABResult] | None = None
+    results: (
+        list[PqTestMUSHRAResult | PqTestAPEResult | PqTestABXResult | PqTestABResult]
+        | None
+    ) = None
+
 
 class PqTestAB(PqTestBase):
     """
@@ -161,7 +172,6 @@ class PqTestAB(PqTestBase):
     questions: list[PqQuestion]
     type: PqTestTypes = PqTestTypes.AB
     results: list[PqTestABResult] | None = None
-
 
 
 class PqTestABX(PqTestBase):
@@ -185,6 +195,7 @@ class PqTestABX(PqTestBase):
     questions: list[PqQuestion] | None = None
     type: PqTestTypes = PqTestTypes.ABX
     results: list[PqTestABXResult] | None = None
+
 
 class PqTestMUSHRA(PqTestBase):
     """
@@ -238,8 +249,6 @@ class PqTestAPE(PqTestBase):
     samples: list[PqSample]
     type: PqTestTypes = PqTestTypes.APE
     results: list[PqTestAPEResult] | None = None
-
-
 
 
 class PqExperiment(BaseModel):
@@ -302,6 +311,7 @@ class PqApiStatus(BaseModel):
 
 class PqExperimentName(BaseModel):
     name: str
+
 
 class PqSamplesRatings(BaseModel):
     filename: str

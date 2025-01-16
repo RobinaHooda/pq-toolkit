@@ -23,6 +23,7 @@ def get_all(session: SessionDep):
 def get_samples(session: SessionDep):
     return crud.get_samples(session)
 
+
 @router.get("/", response_model=PqExperimentsList)
 def get_experiments(session: SessionDep):
     return crud.get_experiments(session)
@@ -74,7 +75,9 @@ def upload_sample(
 
 
 @router.get("/{experiment_name}/samples/{filename}", response_model=UploadFile)
-async def get_sample_by_filename(sample_manager: SampleManagerDep, experiment_name: str, filename: str):
+async def get_sample_by_filename(
+    sample_manager: SampleManagerDep, experiment_name: str, filename: str
+):
     return crud.get_experiment_sample(sample_manager, experiment_name, filename)
 
 

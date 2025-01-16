@@ -56,9 +56,11 @@ class NoTestsFoundForExperiment(PqException):
     def __init__(self, experiment_name: str) -> None:
         super().__init__(f"Experiment {experiment_name} has not tests!", error_code=404)
 
+
 class TestNotFound(PqException):
     def __init__(self, test_id: int) -> None:
         super().__init__(f"test {test_id} does not exist", error_code=404)
+
 
 class NoResultsData(PqException):
     def __init__(self) -> None:
@@ -95,7 +97,7 @@ def transform_experiment(experiment: Experiment) -> PqExperiment:
             "description": experiment.description,
             "endText": experiment.end_text,
             "tests": tests,
-            "uid": experiment.id
+            "uid": experiment.id,
         }
     )
 
@@ -161,10 +163,7 @@ def upload_experiment_config(
     experiment_db.full_name = experiment_upload.name
     experiment_db.description = experiment_upload.description
     experiment_db.end_text = experiment_upload.end_text
-    tests = [
-        transform_test_upload(test)
-        for test in experiment_upload.tests
-    ]
+    tests = [transform_test_upload(test) for test in experiment_upload.tests]
     experiment_db.tests = tests
     experiment_db.configured = True
     session.commit()
@@ -230,7 +229,13 @@ def add_test_results(
 
 def transform_test_result(
     result: ExperimentTestResult, test_type: PqTestTypes
-) -> PqTestABResult | PqTestABXResult | PqTestMUSHRAResult | PqTestACRResult | PqTestAPEResult:
+) -> (
+    PqTestABResult
+    | PqTestABXResult
+    | PqTestMUSHRAResult
+    | PqTestACRResult
+    | PqTestAPEResult
+):
     if test_type == PqTestTypes.AB:
         return PqTestABResult(**result.test_result)
     elif test_type == PqTestTypes.ABX:
@@ -375,6 +380,7 @@ def get_all(session: Session) -> dict[str, PqExperiment]:
             test.results = get_test_results_by_id(session, test.uid)
 
     return experiment_dict
+
 
 def authenticate(session: Session, username: str, hashed_password: str) -> Admin | None:
     statement = select(Admin).where(Admin.username == username)

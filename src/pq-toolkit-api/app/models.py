@@ -28,6 +28,7 @@ class SampleRating(SQLModel, table=True):
     rating: int
     sample: Sample = Relationship(back_populates="sampleRatings")
 
+
 class Experiment(SQLModel, table=True):
     id: UUID | None = Field(default_factory=uuid.uuid4, primary_key=True)
     name: str = Field(index=True, unique=True)
