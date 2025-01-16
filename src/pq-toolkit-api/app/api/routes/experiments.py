@@ -7,11 +7,21 @@ from app.schemas import (
     PqSuccessResponse,
     PqExperiment,
     PqTestResultsList,
+    PqSample,
 )
 import app.crud as crud
 
 router = APIRouter()
 
+
+@router.get("/showcase", response_model=dict[str, PqExperiment])
+def get_all(session: SessionDep):
+    return crud.get_all(session)
+
+
+@router.get("/samples", response_model=list[PqSample])
+def get_samples(session: SessionDep):
+    return crud.get_samples(session)
 
 @router.get("/", response_model=PqExperimentsList)
 def get_experiments(session: SessionDep):
