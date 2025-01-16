@@ -6,7 +6,8 @@ import {
   type BaseTest,
   type ExperimentSetup,
   type FullABXTest,
-  type MUSHRATest
+  type MUSHRATest,
+  type ACRTest,
 } from '@/lib/schemas/experimentSetup'
 import { useState } from 'react'
 import { getSampleUrl } from '../experiments/common/utils'
@@ -22,7 +23,7 @@ const MushraEditor = ({
   currentTest: MUSHRATest
   setCurrentTest: React.Dispatch<
     React.SetStateAction<
-      ABTest | ABXTest | FullABXTest | MUSHRATest | APETest | BaseTest
+      ABTest | ABXTest | FullABXTest | MUSHRATest | ACRTest | APETest | BaseTest
     >
   >
   fileList: File[]

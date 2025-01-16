@@ -44,7 +44,7 @@ export type Question = z.infer<typeof QuestionSchema>
 /**
  * Enum of all available test types
  */
-export const TestTypeEnum = z.enum(['AB', 'ABX', 'MUSHRA', 'APE'])
+export const TestTypeEnum = z.enum(['AB', 'ABX', 'MUSHRA', 'ACR', 'APE'])
 
 /**
  * Type from {@link TestTypeEnum}
@@ -167,6 +167,40 @@ export type MUSHRATest = z.infer<typeof MUSHRATestSchema>
  * @field samplesShuffle - array of sample ids in shuffled order
  */
 export type FullMUSHRATest = z.infer<typeof FullMUSHRATestSchema>
+
+/**
+ * ACR test schema
+ * ACR test consist of one or more samples
+ * User must rate each sample on a scale from 0 to 5
+ */
+export const ACRTestSchema = BaseTestSchema.extend({
+	type: z.enum(['ACR']),
+	question: z.string().optional().nullable(),
+	samples: z.array(SampleSchema).min(1)
+  })
+
+/**
+ * ACR test schema with all required fields filled
+ */
+export const FullACRTestSchema = ACRTestSchema.extend({
+	samplesShuffle: z.array(z.string())
+  })
+  
+  /**
+   * Type from {@link ACRTestSchema}
+   * ACR test schema
+   * @field question - question displayed to user
+   * @field samples - array of samples {@link SampleSchema}
+   */
+  export type ACRTest = z.infer<typeof ACRTestSchema>
+  /**
+   * Type from {@link FullACRTestSchema}
+   * ACR test schema with all required fields filled
+   * @field question - question displayed to user
+   * @field samples - array of samples {@link SampleSchema}
+   * @field samplesShuffle - array of sample ids in shuffled order
+   */
+  export type FullACRTest = z.infer<typeof FullACRTestSchema>
 
 /**
  * APE test schema
