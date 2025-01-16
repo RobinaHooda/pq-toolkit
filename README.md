@@ -105,6 +105,7 @@ Added:
  - Playback in experiment configurator
  - Absolute Category Test
  - CI/ CD and update of some dependencies
+ - User Manual
  - Backend getting results optimalisation for WIMU-24Z team
  - Endpoints for adding and getting samples and their average ratings for WIMU-24Z team
 
