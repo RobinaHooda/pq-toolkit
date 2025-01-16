@@ -87,9 +87,9 @@ jobs:
       - name: containers
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev ps
  
-       - name: logs
+      - name: logs
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev logs
- 
+
       - name: tests
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make test
 
