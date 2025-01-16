@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - main
-      - averages 
+      - quick-fixes-and-cleanup 
   pull_request:
     branches:
       - main
-      - averages 
+      - quick-fixes-and-cleanup 
 
 permissions:
   contents: write
